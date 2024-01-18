@@ -1,6 +1,6 @@
 'use strict';
 
-const {USER_ROLES} = require('../../constants/modelsConstants');
+const {USER_ROLES} = require('../../constants/constants');
 
 export default (sequelize, DataTypes) => {
   const Role = sequelize.define( 'Roles', {
