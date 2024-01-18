@@ -2,7 +2,7 @@
 
 const {USER_ROLES} = require('../../constants/constants');
 
-export default (sequelize, DataTypes) => {
+module.exports = function (sequelize, DataTypes) {
   const Role = sequelize.define( 'Roles', {
       id: {
         type: DataTypes.INTEGER,

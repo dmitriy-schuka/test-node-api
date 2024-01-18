@@ -1,6 +1,6 @@
 'use strict';
 
-export default (sequelize, DataTypes) => {
+module.exports = function (sequelize, DataTypes) {
   const User = sequelize.define( 'Users', {
       id: {
         allowNull: false,
@@ -21,6 +21,7 @@ export default (sequelize, DataTypes) => {
       roleId: {
         type: DataTypes.STRING,
         allowNull: false,
+        default: 2,
         references: {
           model: 'Roles',
           key: 'id'
