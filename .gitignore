@@ -7,3 +7,5 @@ package-lock.json
 
 # Environment Configuration
 .env
+/sequelize-data.json
+/sequelize-meta.json
