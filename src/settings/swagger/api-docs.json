@@ -29,7 +29,7 @@
     }
   ],
   "paths": {
-    "/user/registration":{
+    "/user/signup":{
       "post":{
         "tags":[
           "User"
@@ -60,7 +60,12 @@
             "description":"Registration response",
             "examples": {
               "application/json": {
-                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInVzZXJuYW1lIjoiSmFjazEiLCJpYXQiOjE3MDU2NjIyNTUsImV4cCI6MTcwNTc0ODY1NX0.ZaOrLBK1Sf_yhPkXjhJ6btEMuZYC1xe0l50gf08QUyQ"
+                "user": {
+                  "id": 17,
+                  "username": "Jack",
+                  "roleId": 2
+                },
+                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE3LCJ1c2VyUm9sZSI6InVzZXIiLCJ1c2VybmFtZSI6IkphY2s3IiwiaWF0IjoxNzA1Njc5OTI1LCJleHAiOjE3MDU3NjYzMjV9.FUCnSfYSO15xmcnhCU0Rja8jMp3IhQHnb-TKsLy53N4"
               }
             }
           },
@@ -76,7 +81,7 @@
         }
       }
     },
-    "/user/auth": {
+    "/user/login": {
       "post": {
         "tags": [
           "User"
@@ -107,15 +112,23 @@
             "description":"Authorization response",
             "examples": {
               "application/json": {
-                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInVzZXJuYW1lIjoiSmFjazEiLCJpYXQiOjE3MDU2NjIyNTUsImV4cCI6MTcwNTc0ODY1NX0.ZaOrLBK1Sf_yhPkXjhJ6btEMuZYC1xe0l50gf08QUyQ"
+                "user": {
+                  "id": 17,
+                  "username": "Jack",
+                  "roleId": 2
+                },
+                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE3LCJ1c2VyUm9sZSI6InVzZXIiLCJ1c2VybmFtZSI6IkphY2s3IiwiaWF0IjoxNzA1Njc5OTI1LCJleHAiOjE3MDU3NjYzMjV9.FUCnSfYSO15xmcnhCU0Rja8jMp3IhQHnb-TKsLy53N4"
               }
             }
           },
           "400": {
             "description":"Invalid data for authorization"
           },
+          "401": {
+            "description":"Wrong password"
+          },
           "404": {
-            "description": "Wrong password"
+            "description": "Resource - user not found"
           },
           "500":{
             "description":"Unexpected server error"
@@ -146,11 +159,11 @@
               "$ref":"#/definitions/User"
             }
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "404":{
             "description":"User was not found"
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error."
@@ -198,11 +211,11 @@
           "400": {
             "description":"The request could not be understood by the server due to malformed syntax"
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "404":{
             "description":"User was not found"
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error"
@@ -234,11 +247,11 @@
           "400": {
             "description":"Bad request. Product ID must be an integer and larger than 0."
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "404":{
             "description":"User was not found"
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error."
@@ -297,7 +310,7 @@
                     "genre": "Fantasy"
                   }
                 ],
-                "haveMore": false
+                "isNextPage": false
               }
             }
           },
@@ -341,11 +354,11 @@
           "400": {
             "description":"The request could not be understood by the server due to malformed syntax"
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "404":{
             "description":"Resource - book not found."
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error."
@@ -407,7 +420,7 @@
           "400": {
             "description":"Invalid data for create"
           },
-          "408":{
+          "401":{
             "description":"Token is invalid"
           },
           "500":{
@@ -476,11 +489,11 @@
           "400": {
             "description":"The request could not be understood by the server due to malformed syntax"
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "404":{
             "description":"Resource - book not found."
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error."
@@ -517,11 +530,11 @@
           "400": {
             "description":"The request could not be understood by the server due to malformed syntax"
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "404":{
             "description":"Resource - book not found."
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error."
@@ -559,14 +572,14 @@
               }
             }
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "403":{
             "description":"You do not have permission"
           },
           "404":{
             "description":"Resource - roles not found"
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error"
@@ -605,14 +618,14 @@
           "400": {
             "description":"The request could not be understood by the server due to malformed syntax"
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "403":{
             "description":"You do not have permission"
           },
           "404":{
             "description":"Resource - role not found"
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error"
@@ -657,11 +670,11 @@
           "400": {
             "description":"Invalid data for create"
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "403":{
             "description":"You do not have permission"
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error."
@@ -714,14 +727,14 @@
           "400": {
             "description":"The request could not be understood by the server due to malformed syntax"
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "403":{
             "description":"You do not have permission"
           },
           "404":{
             "description":"Resource - role not found."
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error."
@@ -758,14 +771,14 @@
           "400": {
             "description":"The request could not be understood by the server due to malformed syntax"
           },
+          "401":{
+            "description":"Token is invalid"
+          },
           "403":{
             "description":"You do not have permission"
           },
           "404":{
             "description":"Resource - role not found."
-          },
-          "408":{
-            "description":"Token is invalid"
           },
           "500":{
             "description":"Unexpected server error."
@@ -793,11 +806,6 @@
           "required":true,
           "type":"integer",
           "example":2
-        },
-        "accessToken":{
-          "required":true,
-          "type":"string",
-          "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzZXJuYW1lIjoiSmFjazEiLCJpYXQiOjE3MDU2NTEyNTUsImV4cCI6MTcwNTczNzY1NX0.AlxCFfj5PG5l7-tdB8r4SQ6uvDGz_pYJpc9XvTu1EiU"
         }
       }
     },
