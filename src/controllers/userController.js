@@ -1,71 +1,80 @@
 const db = require('../db/models');
-const jwt = require('jsonwebtoken');
+const {createAccessToken} = require('../utils/accessToken');
 const {
   ServerError,
   NotUniqueUserName,
   ResourceNotFoundError,
-  UserNotFoundError,
-  BadRequestError
+  BadRequestError,
+  UnauthorizedError,
+  ForbiddenError
 } = require('../utils/errors');
 const {passwordCompare} = require('../utils/comparePassword');
-const {JWT_SECRET, ACCESS_TOKEN_TIME} = require('../constants/constants');
 
-module.exports.registration = (req, res, next) => {
+module.exports.registration = async (req, res, next) => {
   try {
     const userData = req.body;
-    userData.password = req.hashPassword;
-    userData.roleId = 2;
-    db.Users.create(userData).then(savedUser => {
-      if (savedUser) {
-        req.newUser = savedUser.dataValues;
-        next();
+    const roleId = userData?.roleId || 2;
+
+    const dataForCreate = {
+      ...userData,
+      password: res.locals.hashPassword,
+      roleId,
+    }
+
+    const savedUser = await db.Users.create(dataForCreate);
+
+    if (savedUser?.dataValues) {
+      const newUserData = savedUser.dataValues;
+      delete newUserData.password;
+
+      const accessToken = await createAccessToken(newUserData);
+
+      if (!accessToken) {
+        return next(new UnauthorizedError());
       }
-    }).catch(err => {
-      if (err.name === 'SequelizeUniqueConstraintError') {
-        next(new NotUniqueUserName(err));
-      } else {
-        next(new BadRequestError(err));
-      }
-    })
+
+      return res.send({user: newUserData, accessToken});
+    }
+
+    return next(new BadRequestError());
   } catch (err) {
-    next(new ServerError(err));
-  }
-};
-
-module.exports.createAccessToken = (req, res, next) => {
-  try {
-    const user = req?.newUser || req?.foundUser;
-
-    const accessToken = jwt.sign({
-      userId: user.id,
-      username: user.username
-    }, JWT_SECRET, {expiresIn: ACCESS_TOKEN_TIME});
-
-    db.Users.update({accessToken}, {where: {id: user.id}})
-      .then(updatedUser => {
-        if (updatedUser) {
-          res.send({token: accessToken});
-        } else {
-          next(new UserNotFoundError('User was not found'));
-        }
-      }).catch(err => {
-      next(new BadRequestError(err));
-    });
-  } catch (err) {
-    next(new ServerError(err));
+    if (err?.name === 'SequelizeUniqueConstraintError') {
+      return next(new NotUniqueUserName());
+    }
+    next(new UnauthorizedError(err));
   }
 };
 
 module.exports.authorization = async (req, res, next) => {
   try {
+    const {username} = req.body
+
+    if (!username) {
+      return next(new ResourceNotFoundError('user'));
+    }
+
     const foundUser = await db.Users.findOne({
-      where: {username: req.body?.username}
+      where: {username}
     });
-    await passwordCompare(req.body.password, foundUser.password);
-    req.foundUser = foundUser;
-    next();
+
+    if (!foundUser && !foundUser.dataValues) {
+      return next(new ResourceNotFoundError('user'));
+    }
+
+    const user = foundUser.dataValues;
+
+    await passwordCompare(req.body.password, user.password);
+    const accessToken = await createAccessToken(user);
+
+    if (!accessToken) {
+      return next(new UnauthorizedError());
+    }
+
+    delete user.password;
+
+    res.send({user, accessToken});
   } catch (err) {
-    next(new ServerError(err));
+    next(new UnauthorizedError(err));
   }
 };
 
@@ -84,51 +93,58 @@ module.exports.getUserById = async (req, res, next) => {
     if (user) {
       res.send(user);
     } else {
-      next(new UserNotFoundError('User was not found'));
+      next(new ResourceNotFoundError('user'));
     }
   } catch (err) {
     next(new ServerError(err));
   }
 };
 
-module.exports.updateUser = (req, res, next) => {
+module.exports.updateUser = async (req, res, next) => {
   try {
     const userId = req?.tokenData?.userId || req.params?.id;
+    const dataForUpdate = {...req.body};
 
-    db.Users.update(req.body, {
+    if (res.locals.hashPassword) {
+      dataForUpdate.password = res.locals.hashPassword;
+    }
+
+    const updateUserResponse =  await db.Users.update(dataForUpdate, {
       where: {id: userId}
-    }).then(result => {
-      if (typeof result[0] === 'number' && result[0] > 0) {
-        res.send(`User with id: ${userId}, was updated!`);
-      } else {
-        next(new UserNotFoundError('User was not found'));
-      }
-    }).catch(err => {
-      next(new BadRequestError(err))
-    })
+    });
+
+    if (updateUserResponse && typeof updateUserResponse[0] === 'number' && updateUserResponse[0] > 0) {
+      res.send(`User with id: ${userId}, was updated!`);
+    } else {
+      next(new ResourceNotFoundError('user'));
+    }
   } catch (err) {
     next(new ServerError(err));
   }
 }
 
-module.exports.deleteUserById = (req, res, next) => {
+module.exports.deleteUserById = async (req, res, next) => {
   try {
     const deletedUserId = req.params?.id;
 
-    db.Users.destroy({
-      where: {
-        id: deletedUserId
-      }
-    }).then(removedProduct => {
-      if (removedProduct) {
+    const {userId, userRole} = res.locals.tokenData;
+
+    if (userId === deletedUserId || userRole === 'admin') {
+      const removedUser = await db.Users.destroy({
+        where: {
+          id: deletedUserId
+        }
+      });
+
+      if (removedUser) {
         res.send(`User with id: ${deletedUserId}, was removed!`);
       } else {
-        next(new UserNotFoundError('User was not found'));
+        next(new ResourceNotFoundError('user'));
       }
-    }).catch(err => {
-      next(new BadRequestError(err))
-    })
+    } else {
+      next(new ForbiddenError());
+    }
   } catch (err) {
-    next(new ServerError(err));
+    next(new BadRequestError(err));
   }
 };
