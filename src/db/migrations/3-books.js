@@ -13,14 +13,13 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
       },
       author: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       year: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       genre: {

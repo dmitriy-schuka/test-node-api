@@ -1,6 +1,6 @@
 'use strict';
 
-const {USER_ROLES} = require("../../constants/modelsConstants");
+const {USER_ROLES} = require("../../constants/constants");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -19,7 +19,8 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       name: {
-        type: Sequelize.ENUM(...USER_ROLES),
+        // type: Sequelize.ENUM(...USER_ROLES),
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
