@@ -4,6 +4,7 @@ module.exports = {
   development: {
     url: process.env.DATABASE_URL,
     dialect: 'postgres',
+    database: process.env.DATABASE_NAME,
     username: process.env.DATABASE_USER_NAME,
     password: process.env.DATABASE_USER_PASSWORD,
     migrationStorage: "json",
@@ -12,6 +13,7 @@ module.exports = {
   test: {
     url: process.env.DATABASE_URL,
     dialect: 'postgres',
+    database: process.env.DATABASE_NAME,
     username: process.env.DATABASE_USER_NAME,
     password: process.env.DATABASE_USER_PASSWORD,
     migrationStorage: "json",
@@ -20,6 +22,7 @@ module.exports = {
   production: {
     url: process.env.DATABASE_URL,
     dialect: 'postgres',
+    database: process.env.DATABASE_NAME,
     username: process.env.DATABASE_USER_NAME,
     password: process.env.DATABASE_USER_PASSWORD,
     migrationStorage: "json",
