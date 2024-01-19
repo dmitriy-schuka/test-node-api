@@ -2,32 +2,30 @@ const express = require('express');
 const hashPassword = require('../middlewares/hashPassword');
 const userController = require('../controllers/userController');
 const validatorMiddleware = require('../middlewares/validation/userValidators');
-const checkToken = require('../middlewares/checkToken');
+const {isAuth} = require('../middlewares/auth');
 const userRouter = express.Router();
 
-userRouter.route('/registration')
+userRouter.route('/signup')
   .post(
     validatorMiddleware.registrationValidate,
     hashPassword,
-    userController.registration,
-    userController.createAccessToken);
+    userController.registration);
 
-userRouter.route('/auth')
+userRouter.route('/login')
   .post(
     validatorMiddleware.loginValidate,
-    userController.authorization,
-    userController.createAccessToken);
+    userController.authorization);
 
-// userRouter.route( '(/:id)?' )
 userRouter.route('/:id')
   .get(
-    checkToken.checkToken,
+    isAuth,
     userController.getUserById)
   .patch(
-    checkToken.checkToken,
+    isAuth,
+    hashPassword,
     userController.updateUser)
   .delete(
-    checkToken.checkToken,
+    isAuth,
     userController.deleteUserById)
 
 module.exports = userRouter;

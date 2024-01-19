@@ -1,8 +1,8 @@
 const express = require('express');
 const bookController = require('../controllers/bookController');
 const validatorMiddleware = require('../middlewares/validation/bookValidators');
-const checkToken = require('../middlewares/checkToken');
-const checkRole = require('../middlewares/checkRole');
+const {isAuth} = require('../middlewares/auth');
+const {isAdmin} = require('../middlewares/isAdmin');
 const bookRouter = express.Router();
 
 bookRouter.route('/all')
@@ -13,17 +13,17 @@ bookRouter.route('/:id')
 
 bookRouter.route('/admin(/:id)?')
   .post(
-    checkToken.checkToken,
-    // checkRole.checkRole,
+    isAuth,
+    isAdmin,
     validatorMiddleware.bookValidate,
     bookController.createBook)
   .patch(
-    checkToken.checkToken,
-    // checkRole.checkRole,
+    isAuth,
+    isAdmin,
     bookController.updateBook)
   .delete(
-    checkToken.checkToken,
-    // checkRole.checkRole,
+    isAuth,
+    isAdmin,
     bookController.deleteBookById);
 
 module.exports = bookRouter;
