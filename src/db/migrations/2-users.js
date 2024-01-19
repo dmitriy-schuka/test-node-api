@@ -27,10 +27,6 @@ module.exports = {
           key: 'id'
         }
       },
-      accessToken: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
     });
   },
 
