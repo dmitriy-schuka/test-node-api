@@ -27,10 +27,6 @@ module.exports = function (sequelize, DataTypes) {
           key: 'id'
         }
       },
-      accessToken: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      }
     },
     {
       timestamps: false
