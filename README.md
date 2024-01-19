@@ -25,14 +25,14 @@ In the terminal in IntellijIdea:
 
 **Launch the application**
 
-In the terminal in IntellijIdea:
+In the terminal in IDE:
 1. npm run start
 2. the server will start
-3. open a new Session in the terminal in IntellijIdea
-4. cd client
-5. npm run start
 
 
 Access for Admin:
 password: "Admin",
 login: "admin"
+
+
+API docs - Swagger - http://<host>:<port>/api-docs/
