@@ -35,4 +35,4 @@ password: "Admin",
 login: "admin"
 
 
-API docs - Swagger - http://<host>:<port>/api-docs/
+API docs - Swagger - http://HOST:PORT/api-docs/
