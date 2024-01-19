@@ -1,6 +1,8 @@
 # test-node-api
 REST-full Node api
 
+node - v18.17.0
+
 **To launch the application**
 
 Install modules and start the service.
