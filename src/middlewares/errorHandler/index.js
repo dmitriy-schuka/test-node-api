@@ -1,10 +1,11 @@
-const { ApplicationError } = require('../../utils/errors');
+const {ApplicationError} = require('../../utils/errors');
 
-function handleApplicationError (err, req, res, next) {
+function handleApplicationError(err, req, res, next) {
   if (err instanceof ApplicationError) {
-    return res.status( err.status ).send( err.message );
+    return res.status(err.status).send(err.message);
   } else {
-    next( err );
+    const errorMessage = err?.message || err;
+    return res.status(500).send('Unexpected server error: ', errorMessage)
   }
 }
 

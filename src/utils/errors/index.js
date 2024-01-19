@@ -12,25 +12,25 @@ class ApplicationError extends Error {
 
 class BadRequestError extends ApplicationError {
   constructor(message) {
-    super(message || 'The request could not be understood by the server due to malformed syntax.', 400);
+    super(message || 'The request could not be understood by the server due to malformed syntax', 400);
+  }
+}
+
+class UnauthorizedError extends ApplicationError {
+  constructor(message) {
+    super(message || 'Auth error', 401);
   }
 }
 
 class ForbiddenError extends ApplicationError {
   constructor(message) {
-    super(message || 'The server understood the request, but is refusing to fulfill it.', 403);
+    super(message || 'You do not have permission', 403);
   }
 }
 
 class ResourceNotFoundError extends ApplicationError {
   constructor(resource = 'resource') {
-    super(`Resource - ${resource} not found.`, 404);
-  }
-}
-
-class ServerError extends ApplicationError {
-  constructor(message) {
-    super(message || 'Unexpected server error', 500);
+    super(`Resource - ${resource} not found`, 404);
   }
 }
 
@@ -40,21 +40,9 @@ class NotUniqueUserName extends ApplicationError {
   }
 }
 
-class UserNotFoundError extends ApplicationError {
+class ServerError extends ApplicationError {
   constructor(message) {
-    super(message || 'User with this username not found', 404);
-  }
-}
-
-class TokenError extends ApplicationError {
-  constructor(message) {
-    super(message || 'Token error', 408);
-  }
-}
-
-class RoleError extends ApplicationError {
-  constructor(message) {
-    super(message || 'You do not have permission', 403);
+    super(message || 'Unexpected server error', 500);
   }
 }
 
@@ -65,7 +53,5 @@ module.exports = {
   ResourceNotFoundError,
   ServerError,
   NotUniqueUserName,
-  UserNotFoundError,
-  TokenError,
-  RoleError
+  UnauthorizedError
 };

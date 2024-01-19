@@ -2,16 +2,19 @@ const express = require('express');
 const cors = require('cors');
 const swaggerRoutes = require('../swagger/swaggerRoutes');
 const router = require('../../routes');
-const expressConfig = express();
+const ErrorHandlers = require('../../middlewares/errorHandler');
+const app = express();
 
 /** cors */
-expressConfig.use(cors());
-expressConfig.options('*', cors());
+app.use(cors());
+app.options('*', cors());
 
-expressConfig.use(express.json());
+app.use(express.json());
 
 /** api */
-expressConfig.use('/api/v1', router );
-expressConfig.use('/api-docs', swaggerRoutes);
+app.use('/api/v1', router );
+app.use('/api-docs', swaggerRoutes);
 
-module.exports = expressConfig;
+router.use(ErrorHandlers.handleApplicationError);
+
+module.exports = app;
