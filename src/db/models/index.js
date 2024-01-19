@@ -37,6 +37,12 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+db[ 'Roles' ].hasMany(db[ 'Users' ],
+  { foreignKey: 'roleId', targetKey: 'id' });
+
+db[ 'Users' ].belongsTo(db[ 'Roles' ],
+  { foreignKey: 'roleId', sourceKey: 'id' });
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

@@ -11,17 +11,20 @@ module.exports = function (sequelize, DataTypes) {
         primaryKey: true,
       },
       name: {
-        type: DataTypes.ENUM(...USER_ROLES),
+        // type: DataTypes.ENUM(...USER_ROLES),
+        type: DataTypes.STRING,
         allowNull: false
       },
     },
-
     {
       timestamps: false,
     });
 
   Role.associate = function (models) {
-    Role.hasOne(models.Users, { foreignKey: 'roleId', targetKey: 'id' });
+    Role.hasMany(models.Users, {
+      foreignKey: 'roleId',
+      targetKey: 'id'
+    });
   };
 
   return Role;
