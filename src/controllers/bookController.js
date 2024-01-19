@@ -17,13 +17,13 @@ module.exports.getAllBooks = (req, res, next) => {
     }
 
     db.Books.findAll(options).then(books => {
-      let haveMore = true;
+      let isNextPage = true;
 
       if (Array.isArray(books) && books.length < 8) {
-        haveMore = false;
+        isNextPage = false;
       }
 
-      res.send({books, haveMore});
+      res.send({books, isNextPage});
     }).catch(err => {
       next(new ResourceNotFoundError('books'));
     });
