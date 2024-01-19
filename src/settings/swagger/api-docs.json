@@ -7,7 +7,7 @@
     "termsOfService": "http://swagger.io/terms/"
   },
   "basePath": "/api/v1",
-  "schemes": ["https", "http"],
+  "schemes": ["http"],
   "consumes":[
     "application/json"
   ],
@@ -29,6 +29,824 @@
     }
   ],
   "paths": {
-
+    "/user/registration":{
+      "post":{
+        "tags":[
+          "User"
+        ],
+        "summary": "Registration user",
+        "description": "Create new user",
+        "operationId": "registration",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "User creation parameters",
+            "in": "body",
+            "description": "Add new user to database",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "example": {
+                "username": "Jack",
+                "password": "123456"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200":{
+            "description":"Registration response",
+            "examples": {
+              "application/json": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInVzZXJuYW1lIjoiSmFjazEiLCJpYXQiOjE3MDU2NjIyNTUsImV4cCI6MTcwNTc0ODY1NX0.ZaOrLBK1Sf_yhPkXjhJ6btEMuZYC1xe0l50gf08QUyQ"
+              }
+            }
+          },
+          "400": {
+            "description":"The request could not be understood by the server due to malformed syntax."
+          },
+          "409": {
+            "description": "This username is already exist."
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      }
+    },
+    "/user/auth": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Authorization user",
+        "description": "Authorizes the user in the system",
+        "operationId": "authorization",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "User authorization parameters",
+            "in": "body",
+            "description": "Login user into system",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "example": {
+                "username": "Jack",
+                "password": "123456"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200":{
+            "description":"Authorization response",
+            "examples": {
+              "application/json": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInVzZXJuYW1lIjoiSmFjazEiLCJpYXQiOjE3MDU2NjIyNTUsImV4cCI6MTcwNTc0ODY1NX0.ZaOrLBK1Sf_yhPkXjhJ6btEMuZYC1xe0l50gf08QUyQ"
+              }
+            }
+          },
+          "400": {
+            "description":"Invalid data for authorization"
+          },
+          "404": {
+            "description": "Wrong password"
+          },
+          "500":{
+            "description":"Unexpected server error"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get one user by id",
+        "description": "Returns one user",
+        "operationId": "getUserById",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Get response",
+            "schema":{
+              "$ref":"#/definitions/User"
+            }
+          },
+          "404":{
+            "description":"User was not found"
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      },
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update user",
+        "description": "Update one user by id",
+        "operationId": "updateUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User updating data",
+            "in": "body",
+            "description": "Update selected data",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "Example of changing User name",
+                  "example": "Jack"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update response",
+            "examples": {
+              "application/json": "User with id: 2, was updated!"
+            }
+          },
+          "400": {
+            "description":"The request could not be understood by the server due to malformed syntax"
+          },
+          "404":{
+            "description":"User was not found"
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["User"],
+        "summary": "Delete one user",
+        "description": "Deletes one user",
+        "operationId": "deleteUserById",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User id to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete response",
+            "examples": {
+              "application/json": "Resource with id: 5, was removed!"
+            }
+          },
+          "400": {
+            "description":"Bad request. Product ID must be an integer and larger than 0."
+          },
+          "404":{
+            "description":"User was not found"
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      }
+    },
+    "/book/all":{
+      "get":{
+        "tags":[
+          "Book"
+        ],
+        "summary": "Get books",
+        "description":"Get all books",
+        "operationId":"getAllBooks",
+        "produces":[
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of items to return",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The number of items to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sort property",
+            "required": false,
+            "type": "string",
+            "default": "title"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Get response",
+            "examples": {
+              "application/json": {
+                "books": [
+                  {
+                    "id": 1,
+                    "title": "Harry Potter",
+                    "author": "J. K. Rowling",
+                    "year": 1999,
+                    "genre": "Fantasy"
+                  }
+                ],
+                "haveMore": false
+              }
+            }
+          },
+          "404":{
+            "description":"Resource - books not found"
+          },
+          "500":{
+            "description":"Unexpected server error"
+          }
+        }
+      }
+    },
+    "/book/{id}":{
+      "get":{
+        "tags":[
+          "Book"
+        ],
+        "summary": "Get one book",
+        "description":"Returns one book",
+        "operationId":"getBookById",
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "description":"Book id to get",
+            "required":true,
+            "type":"integer",
+            "format":"int64"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Get response",
+            "schema":{
+              "$ref":"#/definitions/Book"
+            }
+          },
+          "400": {
+            "description":"The request could not be understood by the server due to malformed syntax"
+          },
+          "404":{
+            "description":"Resource - book not found."
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      }
+    },
+    "/book/admin/{id}":{
+      "post":{
+        "tags":[
+          "Book"
+        ],
+        "summary": "Create book",
+        "description":"Create one book",
+        "operationId":"createBook",
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"Book's creating parameters",
+            "in":"body",
+            "description":"Create selected parameters",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Example of title of the book",
+                  "example":"Harry Potter and the Philosopher's Stone"
+                },
+                "author": {
+                  "type": "string",
+                  "description": "Example of author of the book",
+                  "example":"J. K. Rowling"
+                },
+                "year": {
+                  "type": "number",
+                  "description": "Example of year of the book",
+                  "example":1997
+                },
+                "genre": {
+                  "type": "string",
+                  "description": "Example of genre of the book",
+                  "example":"Fantasy"
+                }
+              }
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Create response",
+            "schema":{
+              "$ref":"#/definitions/Book"
+            }
+          },
+          "400": {
+            "description":"Invalid data for create"
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      },
+      "patch":{
+        "tags":[
+          "Book"
+        ],
+        "summary": "Update book",
+        "description":"Update one book",
+        "operationId":"updateBook",
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "description":"Book id to get",
+            "required":true,
+            "type":"integer",
+            "format":"int64"
+          },
+          {
+            "name":"Book's updating parameters",
+            "in":"body",
+            "description":"Update selected parameters",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Example of title of the book",
+                  "example":"Harry Potter and the Philosopher's Stone"
+                },
+                "author": {
+                  "type": "string",
+                  "description": "Example of author of the book",
+                  "example":"J. K. Rowling"
+                },
+                "year": {
+                  "type": "number",
+                  "description": "Example of year of the book",
+                  "example":1997
+                },
+                "genre": {
+                  "type": "string",
+                  "description": "Example of genre of the book",
+                  "example":"Fantasy"
+                }
+              }
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Update response",
+            "examples": {
+              "application/json": "Book with id: 2, was updated!"
+            }
+          },
+          "400": {
+            "description":"The request could not be understood by the server due to malformed syntax"
+          },
+          "404":{
+            "description":"Resource - book not found."
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      },
+      "delete":{
+        "tags":[
+          "Book"
+        ],
+        "summary": "Delete one book",
+        "description":"Deletes one book",
+        "operationId":"deleteBookById",
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "description":"Book id to delete",
+            "required":true,
+            "type":"integer",
+            "format":"int64"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Delete response",
+            "examples": {
+              "application/json": "Resource with id: 5, was removed!"
+            }
+          },
+          "400": {
+            "description":"The request could not be understood by the server due to malformed syntax"
+          },
+          "404":{
+            "description":"Resource - book not found."
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      }
+    },
+    "/role/all":{
+      "get":{
+        "tags":[
+          "Role"
+        ],
+        "summary": "Get roles",
+        "description":"Get all roles",
+        "operationId":"getAllRoles",
+        "produces":[
+          "application/json"
+        ],
+        "parameters": [],
+        "responses":{
+          "200":{
+            "description":"Get response",
+            "examples": {
+              "application/json": {
+                "roles": [
+                  {
+                    "id": 1,
+                    "name": "admin"
+                  },
+                  {
+                    "id": 2,
+                    "name": "user"
+                  }
+                ]
+              }
+            }
+          },
+          "403":{
+            "description":"You do not have permission"
+          },
+          "404":{
+            "description":"Resource - roles not found"
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error"
+          }
+        }
+      }
+    },
+    "/role/{id}":{
+      "get":{
+        "tags":[
+          "Role"
+        ],
+        "summary": "Get one role",
+        "description":"Returns one role",
+        "operationId":"getRoleById",
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "description":"Role id to get",
+            "required":true,
+            "type":"integer",
+            "format":"int64"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Get response",
+            "schema":{
+              "$ref":"#/definitions/Role"
+            }
+          },
+          "400": {
+            "description":"The request could not be understood by the server due to malformed syntax"
+          },
+          "403":{
+            "description":"You do not have permission"
+          },
+          "404":{
+            "description":"Resource - role not found"
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error"
+          }
+        }
+      },
+      "post":{
+        "tags":[
+          "Role"
+        ],
+        "summary": "Create role",
+        "description":"Create one role",
+        "operationId":"createRole",
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"Role's creating parameters",
+            "in":"body",
+            "description":"Create selected parameters",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name":{
+                  "required":true,
+                  "type":"string",
+                  "example":"user"
+                }
+              }
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Create response",
+            "schema":{
+              "$ref":"#/definitions/Role"
+            }
+          },
+          "400": {
+            "description":"Invalid data for create"
+          },
+          "403":{
+            "description":"You do not have permission"
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      },
+      "patch":{
+        "tags":[
+          "Role"
+        ],
+        "summary": "Update role",
+        "description":"Update one role",
+        "operationId":"updateRole",
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "description":"Role id to get",
+            "required":true,
+            "type":"integer",
+            "format":"int64"
+          },
+          {
+            "name":"Role's updating parameters",
+            "in":"body",
+            "description":"Update selected parameters",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name":{
+                  "required":true,
+                  "type":"string",
+                  "example":"user"
+                }
+              }
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Update response",
+            "examples": {
+              "application/json": "Role with id: 2, was updated!"
+            }
+          },
+          "400": {
+            "description":"The request could not be understood by the server due to malformed syntax"
+          },
+          "403":{
+            "description":"You do not have permission"
+          },
+          "404":{
+            "description":"Resource - role not found."
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      },
+      "delete":{
+        "tags":[
+          "Role"
+        ],
+        "summary": "Delete one role",
+        "description":"Deletes one role",
+        "operationId":"deleteRoleById",
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"id",
+            "in":"path",
+            "description":"Role id to delete",
+            "required":true,
+            "type":"integer",
+            "format":"int64"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Delete response",
+            "examples": {
+              "application/json": "Resource with id: 5, was removed!"
+            }
+          },
+          "400": {
+            "description":"The request could not be understood by the server due to malformed syntax"
+          },
+          "403":{
+            "description":"You do not have permission"
+          },
+          "404":{
+            "description":"Resource - role not found."
+          },
+          "408":{
+            "description":"Token is invalid"
+          },
+          "500":{
+            "description":"Unexpected server error."
+          }
+        }
+      }
+    }
+  },
+  "definitions":{
+    "User": {
+      "type": "object",
+      "properties": {
+        "id":{
+          "required":true,
+          "type":"integer",
+          "format":"int64",
+          "example":2
+        },
+        "username":{
+          "required":true,
+          "type":"string",
+          "example":"John"
+        },
+        "roleId":{
+          "required":true,
+          "type":"integer",
+          "example":2
+        },
+        "accessToken":{
+          "required":true,
+          "type":"string",
+          "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzZXJuYW1lIjoiSmFjazEiLCJpYXQiOjE3MDU2NTEyNTUsImV4cCI6MTcwNTczNzY1NX0.AlxCFfj5PG5l7-tdB8r4SQ6uvDGz_pYJpc9XvTu1EiU"
+        }
+      }
+    },
+    "Book": {
+      "type": "object",
+      "properties": {
+        "id":{
+          "required":true,
+          "type":"integer",
+          "format":"int64",
+          "example":2
+        },
+        "title":{
+          "required":true,
+          "type":"string",
+          "example":"Harry Potter"
+        },
+        "author":{
+          "required":true,
+          "type":"string",
+          "example":"J. K. Rowling"
+        },
+        "year":{
+          "required":true,
+          "type":"number",
+          "example":1999
+        },
+        "genre":{
+          "required":true,
+          "type":"string",
+          "example":"Fantasy"
+        }
+      }
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id":{
+          "required":true,
+          "type":"integer",
+          "format":"int64",
+          "example":2
+        },
+        "name":{
+          "required":true,
+          "type":"string",
+          "example":"user"
+        }
+      }
+    }
   }
 }
